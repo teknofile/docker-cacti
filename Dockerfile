@@ -51,6 +51,10 @@ RUN \
     nginx \
     openssl \
     mysql-client \
+    net-snmp \
+    net-snmp-agent-libs \
+    net-snmp-libs \
+    net-snmp-tools \
     unzip
 
 RUN echo "*** Configuring NGINX ***"
