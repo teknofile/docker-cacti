@@ -49,7 +49,7 @@ RUN echo 'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;' >> 
 RUN rm -f /etc/nginx/conf.d/default.conf
 
 RUN echo "*** Fixing logrotate ***"
-RUN sed -i "s$/var/log/messages {}.*# #g" /etc/logrotate.conf
+RUN sed -i "s#/var/log/messages {}.*# #g" /etc/logrotate.conf
 RUN sed -i 's#/usr/sbin/logrotate /etc/logrotate.conf#/usr/sbin/logrotate /etc/logrotate.conf -s /config/log/logrotate.status#g' /etc/periodic/daily/logrotate
 
 

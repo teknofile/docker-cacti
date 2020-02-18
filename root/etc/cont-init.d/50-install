@@ -5,6 +5,17 @@ mkdir -p \
 
 if [ ! -f "/config/www/cacti/index.php" ]; then
   tar zxf /cacti/cacti.tar.gz -C /config/www/cacti --strip-components=1
+
+  rm -f /config/www/cacti/include/config.php
+fi
+
+if [ ! -f "/config/www/cacti/include/config.php" ]; then
+  cp /defaults/config.php /config/www/cacti/include/config.php
+
+  sed -i "s~%%MYSQL_DATABASE%%~${MYSQL_DATABASE}~g" /config/www/cacti/include/config.php
+  sed -i "s~%%MYSQL_HOSTNAME%%~${MYSQL_HOSTNAME}~g" /config/www/cacti/include/config.php
+  sed -i "s~%%MYSQL_USERNAME%%~${MYSQL_USERNAME}~g" /config/www/cacti/include/config.php
+  sed -i "s~%%MYSQL_PASSWORD%%~${MYSQL_PASSWORD}~g" /config/www/cacti/include/config.php
 fi
 
 chown -R abc:abc /config
