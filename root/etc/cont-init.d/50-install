@@ -18,4 +18,6 @@ if [ ! -f "/config/www/cacti/include/config.php" ]; then
   sed -i "s~%%MYSQL_PASSWORD%%~${MYSQL_PASSWORD}~g" /config/www/cacti/include/config.php
 fi
 
+mysql -h ${MYSQL_HOSTNAME} -u ${MYSQL_USERNAME} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE} < /config/www/cacti/cacti.sql
+
 chown -R abc:abc /config
