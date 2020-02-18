@@ -50,6 +50,7 @@ RUN \
     libressl3.0-libssl \
     nginx \
     openssl \
+    mysql-client \
     unzip
 
 RUN echo "*** Configuring NGINX ***"
