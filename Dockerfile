@@ -13,6 +13,7 @@ LABEL maintainer="teknofile <teknofile@teknofile.org>"
 RUN \
   echo "** Install the runtime packages" && \
   apk add --no-cache --upgrade \
+    bash \
     curl \
     php7-pdo_mysql \
     php7-mysqli \
@@ -33,6 +34,13 @@ RUN \
     php7-simplexml \
     php7-xmlwriter \
     php7-zlib \
+    php7-ctype \
+    php7-gmp \
+    php7-ldap \
+    php7-sockets\ 
+    php7-posix \
+    php7-snmp \
+    php7-gettext \
     librrd \
     rrdtool \
     rrdtool-cached \
