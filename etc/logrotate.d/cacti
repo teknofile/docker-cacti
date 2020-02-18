@@ -1,0 +1,9 @@
+/config/log/cacti/ {
+  size 5M
+  rotate 5
+  compress
+  nodateext
+  notifyempty
+  missingok
+  su abc abc
+}

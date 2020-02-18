@@ -1,0 +1,30 @@
+---
+
+# project information
+project_name: phpldapadmin
+project_url: "http://phpldapadmin.sf.net/"
+project_logo: "http://phpldapadmin.sourceforge.net/wiki/images/d/d4/Logo.jpg"
+project_blurb: "[{{ project_name|capitalize }}]({{ project_url }})  PHP web based GUI to manage an LDAP server"
+project_tkf_github_repo_url: "https://github.com/teknofile/tkf-docker-{{ project_name }}"
+
+# supported architectures
+available_architectures:
+  - { arch: "{{ arch_x86_64 }}", tag: "amd64-latest"}
+
+# container parameters
+param_container_name: "{{ project_name }}"
+param_usage_include_vols: true
+param_volumes:
+  - { vol_path: "/config", vol_host_path: "</path/to/postfix/config>", desc: "Configure the `Targets` file here" }
+param_usage_include_ports: true
+param_ports:
+  - { external_port: "80", internal_port: "80", port_desc: "HTTP access." }
+  - { external_port: "443", internal_port: "443", port_desc: "HTTPS access." }
+param_usage_include_env: true
+param_env_vars:
+  - { env_var: "TZ", env_value: "Europe/London", desc: "Specify a timezone to use EG Europe/London"}
+
+# changelog
+changelogs:
+  - { date: "10.05.19:", desc: "This is the first release, it is mostly stable, but may contain minor defects. (thus a beta tag)" }
+

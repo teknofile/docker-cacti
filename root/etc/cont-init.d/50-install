@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv bash
+
+mkdir -p \
+  /config/www/cacti
+
+if [ ! -f "/config/www/cacti/index.php" ]; then
+  tar zxf /cacti/cacti.tar.gz -C /config/www/cacti --strip-components=1
+fi
+
+chown -R abc:abc /config
