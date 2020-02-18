@@ -1,4 +1,12 @@
-ERROR 1419 (HY000) at line 9: You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+This container expects that the cacti DB to be already created, with correct user permissions to access it and the base schema applied.
 
-mysql -u USERNAME -p
-set global log_bin_trust_function_creators=1;
+My testing has been against MySQL (mariadb should work).
+
+CREATE USER 'cactiuser'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON cacti.* to 'cactiuser'@'%';
+
+# Needed for MySQL (need to test with mariadb?)
+ALTER USER 'cactiuser'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+
+CREATE DATABASE cacti;
+mysql -h mysql -u root -p < cacti.sql

@@ -16,8 +16,17 @@ mkdir -p \
 	cp /defaults/index.html /config/www/index.html
 
 # create local php.ini if it doesn't exist, set local timezone
-[[ ! -f /config/php/php-local.ini ]] && \
-	printf "; Edit this file to override php.ini directives and restart the container\\n\\ndate.timezone = %s\\n" "$TZ" > /config/php/php-local.ini
+#[[ ! -f /config/php/php-local.ini ]] && \
+#	printf "; Edit this file to override php.ini directives and restart the container\\n\\ndate.timezone = %s\\n" "$TZ" > /config/php/php-local.ini
+
+if [ ! -f /config/php/php-local.ini ]; then
+  echo "; Edit this file to override php.ini directives and restart the container" > /config/php/php-local.ini
+  echo >> /config/php/php-local.ini
+  echo "date.timezone = ${TZ}" >> /config/php/php-local.ini
+  echo "max_execution_time = 60" >> /config/php/php-local.ini
+  echo "memory_limit = 512M" >> /config/php/php-local.ini
+fi
+
 # copy user php-local.ini to image
 cp /config/php/php-local.ini /etc/php7/conf.d/php-local.ini
 #fix php-fpm log location
