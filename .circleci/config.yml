@@ -2,8 +2,7 @@ version: 2.1
 executors:
   docker-publisher:
     environment:
-      REPO_NAME: teknofile
-      IMAGE_NAME: tkfbase
+      IMAGE_NAME: teknofile/tkf-docker-cacti
     docker:
       - image: circleci/buildpack-deps:stretch
 jobs:
@@ -13,8 +12,8 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build Docker image
-          command: docker build -t ${REPO_NAME}/${IMAGE_NAME}:latest .
+          name: Build Docker Image
+          command: docker build -t ${IMAGE_NAME}:latest .
       - run:
           name: Archive Docker Image
           command: docker save -o image.tar ${REPO_NAME}/${IMAGE_NAME}:latest
@@ -35,6 +34,7 @@ jobs:
           name: Publish Docker To Docker Hub
           command: |
             echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+            docker tag ${REPO_NAME}/$
             docker push ${REPO_NAME}/${IMAGE_NAME}:latest
 workflows:
   version: 2
