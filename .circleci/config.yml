@@ -16,7 +16,7 @@ jobs:
           command: docker build -t ${IMAGE_NAME}:latest .
       - run:
           name: Archive Docker Image
-          command: docker save -o image.tar ${REPO_NAME}/${IMAGE_NAME}:latest
+          command: docker save -o image.tar ${IMAGE_NAME}:latest
       - persist_to_workspace:
           root: .
           paths:
@@ -34,19 +34,20 @@ jobs:
           name: Publish Docker To Docker Hub
           command: |
             echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
-            docker tag ${REPO_NAME}/$
-            docker push ${REPO_NAME}/${IMAGE_NAME}:latest
+          docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${CIRCLE_SHA1}
+          docker push ${IMAGE_NAME}:latest
+          docker push ${IMAGE_NAME}:${CIRCLE_SHA1}
 workflows:
   version: 2
   build-master:
     jobs:
       - build:
-          context: Docker Context
+          context: DockerPublishInfo
           filters:
             branches:
               only: master
       - publish-latest:
-          context: Docker Context
+          context: DockerPublishInfo
           requires:
             - build
           filters:
