@@ -2,6 +2,7 @@ version: 2.1
 executors:
   docker-publisher:
     environment:
+      GITHUB_REPO: teknofile/docker-cacti
       IMAGE_NAME: teknofile/tkf-docker-cacti
     docker:
       - image: circleci/buildpack-deps:stretch
@@ -37,6 +38,16 @@ jobs:
             docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${CIRCLE_SHA1}
             docker push ${IMAGE_NAME}:latest
             docker push ${IMAGE_NAME}:${CIRCLE_SHA1}
+      - run:
+          name: Sync Read-Mes
+          command: |
+            docker run --rm=true \
+              -e DOCKERHUB_USERNAME="${DOCKER_USER}" \
+              -e DOCKERHUB_PASSWORD="${DOCKER_PASS}" \
+              -e GIT_REPOSITORY= ${GITHUB_REPO} \
+              -e DOCKER_REPOSITORY= ${IMAGE_NAME} \
+              -e GIT_BRANCH=${CIRCLE_BRANCH} \
+              lsiodev/readme-sync bash -c 'node sync'
   publish-tag:
     executor: docker-publisher
     steps:
