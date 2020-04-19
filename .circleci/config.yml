@@ -4,6 +4,8 @@ executors:
     environment:
       GITHUB_REPO: teknofile/docker-cacti
       IMAGE_NAME: teknofile/tkf-docker-cacti
+      DOCKER_CLI_EXPERIMENTAL: enabled
+      DOCKER_BUILDKIT: 1
     docker:
       - image: circleci/buildpack-deps:stretch
 jobs:
@@ -12,6 +14,9 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+      - run:
+          name: Testing Docker
+          command: docker version
       - run:
           name: Build Docker Image
           command: docker build -t ${IMAGE_NAME}:latest .
