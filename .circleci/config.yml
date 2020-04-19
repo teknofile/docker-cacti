@@ -5,7 +5,7 @@ executors:
       GITHUB_REPO: teknofile/docker-cacti
       IMAGE_NAME: teknofile/tkf-docker-cacti
       #DOCKER_CLI_EXPERIMENTAL: enabled
-      #DOCKER_BUILDKIT: 1
+      DOCKER_BUILDKIT: 1
     docker:
       - image: circleci/buildpack-deps:stretch
 jobs:
