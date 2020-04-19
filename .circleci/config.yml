@@ -84,7 +84,7 @@ workflows:
       - publish-tag:
           context: DockerPublishInfo
           requires:
-            - build:
+            - build
           filters:
             tags:
               only: /^v.*/
