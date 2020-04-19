@@ -40,8 +40,7 @@ jobs:
             docker push ${IMAGE_NAME}:${CIRCLE_SHA1}
       - run:
           name: Sync Read-Mes
-          command: 
-            - >-
+          command: > 
               docker run --rm=true 
               -e DOCKERHUB_USERNAME="${DOCKER_USER}" -e DOCKERHUB_PASSWORD="${DOCKER_PASS}"
               -e GIT_REPOSITORY= ${GITHUB_REPO}
