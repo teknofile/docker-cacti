@@ -43,8 +43,8 @@ jobs:
           command: > 
               docker run --rm=true 
               -e DOCKERHUB_USERNAME="${DOCKER_USER}" -e DOCKERHUB_PASSWORD="${DOCKER_PASS}"
-              -e GIT_REPOSITORY= ${GITHUB_REPO}
-              -e DOCKER_REPOSITORY= ${IMAGE_NAME}
+              -e GIT_REPOSITORY=${GITHUB_REPO}
+              -e DOCKER_REPOSITORY=${IMAGE_NAME}
               -e GIT_BRANCH=${CIRCLE_BRANCH}
               lsiodev/readme-sync bash -c 'node sync'
   publish-tag:
