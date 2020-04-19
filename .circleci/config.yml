@@ -37,6 +37,25 @@ jobs:
             docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${CIRCLE_SHA1}
             docker push ${IMAGE_NAME}:latest
             docker push ${IMAGE_NAME}:${CIRCLE_SHA1}
+  publish-tag:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load Archived Docker Image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Publish Docker Image and Tags
+          command: |
+            echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+            IMAGE_TAG="0.0.${CIRCLE_BUILD_NUM}"
+            docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${CIRCLE_SHA1}
+            docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${IMAGE_TAG}
+            docker push ${IMAGE_NAME}:latest
+            docker push ${IMAGE_NAME}:${CIRCLE_SHA1}
+            docker push ${IMAGE_NAME}:${IMAGE_TAG}
 workflows:
   version: 2
   build-master:
@@ -53,3 +72,21 @@ workflows:
           filters:
             branches:
               only: master
+  build-tags:
+    jobs:
+      - build:
+          context: DockerPublishInfo
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      - publish-tag:
+          context: DockerPublishInfo
+          requires:
+            - build:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
