@@ -45,6 +45,12 @@ pipeline {
           docker buildx build -t ${TKF_USER}/${CONTAINER_NAME} --platform=linux/arm,linux/arm64,linux/amd64 . --push
           '''
       }
+      steps {
+        sh '''
+          docker stop buildx_buildkit_mybuilder0
+          docker rm buildx_buildkit_mybuilder0
+        '''
+      }
     }
   }
 }
