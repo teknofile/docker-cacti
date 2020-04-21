@@ -6,7 +6,6 @@ pipeline {
   environment {
     CONTAINER_NAME = 'tkf-docker-cacti'
     TKF_USER = 'teknofile'
-
   }
 
   stages {
