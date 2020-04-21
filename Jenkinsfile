@@ -38,13 +38,12 @@ pipeline {
          docker buildx create --use --name mybuilder
          docker buildx ls
          '''
-        // 
       }
     }
     stage('Build and Publish') {
       steps {
         sh '''
-          docker buildx build -t mirailabs/hello-arch --platform=linux/arm,linux/arm64,linux/amd64 . --push
+          docker buildx build -t ${TKF_USER}/${CONTAINER_NAME} --platform=linux/arm,linux/arm64,linux/amd64 . --push
           '''
       }
     }
