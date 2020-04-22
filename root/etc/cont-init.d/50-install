@@ -18,13 +18,8 @@ if [ ! -f "/config/www/cacti/include/config.php" ]; then
   sed -i "s~%%MYSQL_PASSWORD%%~${MYSQL_PASSWORD}~g" /config/www/cacti/include/config.php
 fi
 
-
-echo "*/5     *       *       *       *       run-parts /config/cron-5m" > /etc/crontabs/abc
-chown abc:abc /etc/crontabs/abc
-
 touch /var/log/poller.log
 chown abc:abc /var/log/poller.log
-mkdir -p /config/cron-5m
-echo "php /config/www/cacti/poller.php >> /var/log/poller.log" > /config/cron-5m/poller
-chmod +x /config/cron-5m/poller
+echo "*/5 * * * *   abc php /config/www/cacti/poller.php >> /var/log/poller.log" > /etc/cron.d/cacti
+
 chown -R abc:abc /config
