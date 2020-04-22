@@ -47,7 +47,7 @@ RUN sed -i 's#/usr/sbin/logrotate /etc/logrotate.conf#/usr/sbin/logrotate /etc/l
 # Having reCaptcha issues so just download it before hand and stick here i guess
 RUN mkdir -p /cacti/
 #RUN curl -o /cacti/cacti.tar.gz -L https://www.cacti.net/downloads/cacti-latest.tar.gz
-COPY contrib/cacti-latest.tar.gz /cacti/cacti.tar.gz
+COPY ./contrib/cacti-latest.tar.gz /cacti/cacti.tar.gz
 
 COPY root/ /
 
