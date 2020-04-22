@@ -21,3 +21,6 @@ fi
 #mysql -h ${MYSQL_HOSTNAME} -u ${MYSQL_USERNAME} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE} < /config/www/cacti/cacti.sql
 
 chown -R abc:abc /config
+
+echo "*/5     *       *       *       *       php /config/www/cacti/poller.php > /dev/null 2>&1" > /etc/crontabs/abc
+chown abc:abc /etc/crontabs/abc

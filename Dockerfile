@@ -57,6 +57,13 @@ RUN \
     net-snmp-tools \
     unzip
 
+RUN echo "*** Adding some fonts ***"
+RUN apk add --no-cache \
+  msttcorefonts-installer \
+  fontconfig \
+  terminus-font \
+  ttf-opensans 
+
 RUN echo "*** Configuring NGINX ***"
 RUN echo 'fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;' >> /etc/nginx/fastcgi_params
 RUN rm -f /etc/nginx/conf.d/default.conf
