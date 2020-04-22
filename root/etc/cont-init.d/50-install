@@ -18,9 +18,12 @@ if [ ! -f "/config/www/cacti/include/config.php" ]; then
   sed -i "s~%%MYSQL_PASSWORD%%~${MYSQL_PASSWORD}~g" /config/www/cacti/include/config.php
 fi
 
-#mysql -h ${MYSQL_HOSTNAME} -u ${MYSQL_USERNAME} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE} < /config/www/cacti/cacti.sql
 
-chown -R abc:abc /config
-
-echo "*/5     *       *       *       *       php /config/www/cacti/poller.php > /dev/null 2>&1" > /etc/crontabs/abc
+echo "*/5     *       *       *       *       run-parts /config/cron-5m" > /etc/crontabs/abc
 chown abc:abc /etc/crontabs/abc
+
+touch /var/log/poller.log
+chown abc:abc /var/log/poller.log
+echo "php /config/www/cacti/poller.php >> /var/log/poller.log" > /config/cron-5m/poller
+chmod +x /config/cron-5m/poller
+chown -R abc:abc /config
