@@ -24,6 +24,7 @@ chown abc:abc /etc/crontabs/abc
 
 touch /var/log/poller.log
 chown abc:abc /var/log/poller.log
+mkdir -p /config/cron-5m
 echo "php /config/www/cacti/poller.php >> /var/log/poller.log" > /config/cron-5m/poller
 chmod +x /config/cron-5m/poller
 chown -R abc:abc /config
