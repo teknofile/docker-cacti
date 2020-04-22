@@ -1,7 +1,7 @@
 # docker-cacti
 
 Docker-cacti is an implementation of cacti inside of a docker container. This container is based off of s6-overlay and uses much of the same structure as the folks at [linuxserver.io](https://github.com/linuxserver). 
-This container, when started stores it's data and state in /config. The cacti application runs behind nginx and the image itself is runs in an alpine image. 
+This container, when started stores it's data and state in /config. The cacti application runs behind nginx and the image itself is runs in an ubuntu image. 
 
 # Running the container
 
