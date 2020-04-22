@@ -26,7 +26,7 @@ RUN apt-get update && \
   curl php-mysql php-cgi php-curl php-dom php-gd php-imagick php-xmlrpc php-rrd \
   php-xsl php-fileinfo php-fpm php-json php-mbstring php-simplexml \
   php-xmlwriter php-ctype php-gmp php-ldap php-sockets php-posix php-snmp php-gettext \
-  rrdtool nginx openssl mysql-client snmpd unzip cron vim logrotate net-tools
+  rrdtool nginx openssl mysql-client snmpd unzip cron logrotate
 
 #RUN echo "*** Adding some fonts ***"
 #RUN apk add --no-cache \
