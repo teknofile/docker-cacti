@@ -11,22 +11,24 @@ ENV TZ America/Denver
 LABEL build_version="teknofile.org version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="teknofile <teknofile@teknofile.org>"
 
-ARG S6_OVERLAY_VERSION=1.22.1.0
+#ARG S6_OVERLAY_VERSION=1.22.1.0
+
+#RUN apt-get update && \
+#    DEBIAN_FRONTEND=noninteractive apt-get install -y wget tzdata && \
+#    cd /tmp && \
+#    wget https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz && \
+#    tar xzf s6-overlay-amd64.tar.gz -C / && \
+#    rm s6-overlay-amd64.tar.gz
 
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y wget tzdata && \
-    cd /tmp && \
-    wget https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz && \
-    tar xzf s6-overlay-amd64.tar.gz -C / && \
-    rm s6-overlay-amd64.tar.gz
-
+      DEBIAN_FRONTEND=noninteractive apt-get install -y wget tzdata 
 
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
   curl php-mysql php-cgi php-curl php-dom php-gd php-imagick php-xmlrpc php-rrd \
   php-xsl php-fileinfo php-fpm php-json php-mbstring php-simplexml \
   php-xmlwriter php-ctype php-gmp php-ldap php-sockets php-posix php-snmp php-gettext \
-  rrdtool nginx openssl mysql-client snmpd unzip cron logrotate
+  rrdtool nginx openssl mysql-client snmpd unzip cron logrotate snmp-mibs-downloader
 
 #RUN echo "*** Adding some fonts ***"
 #RUN apk add --no-cache \
@@ -55,13 +57,13 @@ COPY root/ /
 VOLUME /config
 EXPOSE 80 443
 
-RUN echo "**** create abc user and make our folders ****" && \
-  groupmod -g 1000 users && \
-  useradd -u 911 -U -d /config -s /bin/false abc && \
-  usermod -G users abc && \
-  mkdir -p \
-  /app \
-  /config \
-  /defaults
+#RUN echo "**** create abc user and make our folders ****" && \
+#  groupmod -g 1000 users && \
+#  useradd -u 911 -U -d /config -s /bin/false abc && \
+#  usermod -G users abc && \
+#  mkdir -p \
+#  /app \
+#  /config \
+#  /defaults
 
 ENTRYPOINT ["/init"]
