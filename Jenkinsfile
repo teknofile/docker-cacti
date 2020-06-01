@@ -25,13 +25,13 @@ pipeline {
         sh '''
           export DOCKER_CLI_EXPERIMENTAL=enabled
           export DOCKER_BUILDKIT=1
-          docker build --platform=local -o . git://github.com/docker/buildx
-          mkdir -p ~/.docker/cli-plugins && mv buildx ~/.docker/cli-plugins/docker-buildx
+          #docker build --platform=local -o . git://github.com/docker/buildx
+          #mkdir -p ~/.docker/cli-plugins && mv buildx ~/.docker/cli-plugins/docker-buildx
         '''
         // Enable binfmt_misc to run non-native Docker images
-        sh '''
-          docker run --rm --privileged docker/binfmt:66f9012c56a8316f9244ffd7622d7c21c1f6f28d
-        '''
+        //sh '''
+        //  docker run --rm --privileged docker/binfmt:66f9012c56a8316f9244ffd7622d7c21c1f6f28d
+        //'''
         // Switch from the default Docker builder to a multi-arch builder
         //sh '''
         // docker buildx create --use --name mybuilder
@@ -43,10 +43,12 @@ pipeline {
       steps {
         sh '''
           docker buildx build -t ${TKF_USER}/${CONTAINER_NAME} --platform=linux/arm,linux/arm64,linux/amd64 . --push
-          docker stop buildx_buildkit_mybuilder0
-          docker rm buildx_buildkit_mybuilder0
+          #docker stop buildx_buildkit_mybuilder0
+          #docker rm buildx_buildkit_mybuilder0
           '''
       }
+// ### TODO: We do want to 'clean up' afterwards. probaly create abuilder, then delete that builder for this specific build i'm guessing
+// ### That way we don't run into caching artifacts.
 //      steps {
 //        sh '''
 //          docker stop buildx_buildkit_mybuilder0
