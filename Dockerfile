@@ -31,22 +31,11 @@ RUN sed -i 's#/usr/sbin/logrotate /etc/logrotate.conf#/usr/sbin/logrotate /etc/l
 
 # Having reCaptcha issues so just download it before hand and stick here i guess
 RUN mkdir -p /cacti/
-#RUN curl -o /cacti/cacti.tar.gz -L https://www.cacti.net/downloads/cacti-latest.tar.gz
-COPY ./contrib/cacti-latest.tar.gz /cacti/cacti.tar.gz
-#ADD ./contrib/cacti*gz /cacti/
+ADD ./contrib/cacti*gz /cacti/
 
 COPY root/ /
 
 VOLUME /config
 EXPOSE 80 443
-
-#RUN echo "**** create abc user and make our folders ****" && \
-#  groupmod -g 1000 users && \
-#  useradd -u 911 -U -d /config -s /bin/false abc && \
-#  usermod -G users abc && \
-#  mkdir -p \
-#  /app \
-#  /config \
-#  /defaults
 
 ENTRYPOINT ["/init"]

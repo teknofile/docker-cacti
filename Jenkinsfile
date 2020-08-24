@@ -6,55 +6,67 @@ pipeline {
   environment {
     CONTAINER_NAME = 'tkf-docker-cacti'
     TKF_USER = 'teknofile'
+
+    LOCAL_DOCKER_PROXY="docker.copperdale.teknofile.net"
+    SCAN_SCRIPT="https://nexus.copperdale.teknofile.net/repository/teknofile-utils/teknofile/ci/utils/tkf-inline-scan-v0.6.0-1.sh"
+
+    DOCKER_CLI_EXPERIMENTAL='enabled'
   }
 
   stages {
-    // Run SHellCheck
-    stage('ShellCheck') {
+    stage('Setup enviornment and Start ') {
       steps {
-        sh '''echo "TODO: Determine a good strategy for finding and scanning shell code"'''
-      }
+        slackSend (color: '#ffff00', message: "STARTED: Job '${env.JOB_NAME}' [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+
+        script {
+          env.EXIT_STATUS = ''
+
+          env.CURR_DATE = sh(
+            script: '''date '+%Y-%m-%dT%H:%M:%S%:z' ''',
+            returnStdout: true).trim()
+
+          env.GITHASH_LONG = sh(
+            script: '''git log -1 --format=%H''',
+            returnStdout: true).trim()
+
+          env.GITHASH_SHORT = sh(
+            script: '''git log -1 --format=%h''',
+            returnStdout: true).trim()
+
+        }
     }
     stage('Docker Linting') {
       steps {
-        sh '''echo "TODO: Determine a good strategy for linting a Dockerfile"'''
-      }
-    }
-    stage('Enabling and Building Buildx') {
-      steps {
-        sh '''
-          export DOCKER_CLI_EXPERIMENTAL=enabled
-          export DOCKER_BUILDKIT=1
-          #docker build --platform=local -o . git://github.com/docker/buildx
-          #mkdir -p ~/.docker/cli-plugins && mv buildx ~/.docker/cli-plugins/docker-buildx
-        '''
-        // Enable binfmt_misc to run non-native Docker images
-        //sh '''
-        //  docker run --rm --privileged docker/binfmt:66f9012c56a8316f9244ffd7622d7c21c1f6f28d
-        //'''
-        // Switch from the default Docker builder to a multi-arch builder
-        //sh '''
-        // docker buildx create --use --name mybuilder
-        // docker buildx ls
-        // '''
+	sh '''
+	  docker run --rm -i ${LOCAL_DOCKER_PROXY}/hadolint/hadolint < Dockerfile || true
+	'''
       }
     }
     stage('Build and Publish') {
       steps {
-        sh '''
-          docker buildx build -t ${TKF_USER}/${CONTAINER_NAME} --platform=linux/arm,linux/arm64,linux/amd64 . --push
-          #docker stop buildx_buildkit_mybuilder0
-          #docker rm buildx_buildkit_mybuilder0
-          '''
+	script {
+	  withDockerRegistry(credentialsId: 'teknofile-docker-creds') {
+	    sh '''
+		docker buildx create --use --name mybuilder-${CONTAINER_NAME}
+		docker buildx build -t ${TKF_USER}/${CONTAINER_NAME} --platform=linux/arm,linux/arm64,linux/amd64 . --push
+		docker buildx rm mybuilder-${CONTAINER_NAME}
+	    '''
+	  }
+	}
       }
-// ### TODO: We do want to 'clean up' afterwards. probaly create abuilder, then delete that builder for this specific build i'm guessing
-// ### That way we don't run into caching artifacts.
-//      steps {
-//        sh '''
-//          docker stop buildx_buildkit_mybuilder0
-//          docker rm buildx_buildkit_mybuilder0
-//        '''
-//      }
+    }
+    stage('Image Scan') {
+      steps {
+        sh 'curl -s ${SCAN_SCRIPT} | bash -s -- -t 1800 -r -p ${LOCAL_DOCKER_PROXY}/${TKF_USER}/${CONTAINER_NAME}:${GITHASH_LONG}'
+      }
+    }
+  }
+  post { 
+    success {
+      slackSend(color: '#00FF00', message: 'SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' ($env.BUILD_URL})")
+    }
+    failure {
+      slackSend(color: '#FF0000', message: 'FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' ($env.BUILD_URL})")
     }
   }
 }
