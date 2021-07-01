@@ -19,7 +19,7 @@ if [ ! -f "/config/www/cacti/include/config.php" ]; then
 fi
 
 touch /var/log/poller.log
-chown abc:abc /var/log/poller.log
-echo "*/5 * * * *   abc php /config/www/cacti/poller.php >> /var/log/poller.log" > /etc/cron.d/cacti
+chown tkf:tkf /var/log/poller.log
+echo "*/5 * * * *   tkf php /config/www/cacti/poller.php >> /var/log/poller.log" > /etc/cron.d/cacti
 
-chown -R abc:abc /config
+chown -R tkf:tkf /config
